@@ -1,0 +1,522 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "This is a user information application. You can create users, retrieve their information (last and first name as well as their email addresses and phone numbers) by user ID or last name. What is more, you can update their phone numbers/mail addresse through their user ID and phone/mail address ID. Last but not least, you can also delete users by ID thereby also deleting all their email addresses and phone numbers. Try it out!",
+        "version": "1.0.0",
+        "title": "API Documentation | Challenge: User service",
+        "contact": {
+            "email": "friederike.di.land@gmail.com"
+        }
+    },
+    "server": [
+        {
+            "url": "/"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Users",
+            "description": "Retrieve information on all users"
+        },
+        {
+            "name": "Individual user information",
+            "description": "Retrieve information on an individual user"
+        }
+    ],
+    "paths": {
+        "/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Returns all existing users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserListResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Individual user information"
+                ],
+                "summary": "Create a new user",
+                "requestBody": {
+                    "description": "User Request Post Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRequest"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the user we want to match",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Individual user information"
+                ],
+                "summary": "Get user request with given ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User Request ID",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/components/schemas/UserListResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad Request."
+                    },
+                    "404": {
+                        "description": "Failed. User not found."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete User Request by ID",
+                "tags": [
+                    "Individual user information"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User Request ID",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Misunderstood Request."
+                    },
+                    "404": {
+                        "description": "Failed. Book Request not found."
+                    }
+                }
+            }
+        },
+        "/users/{family_name}": {
+            "parameters": [
+                {
+                    "name": "family_name",
+                    "in": "path",
+                    "required": true,
+                    "description": "Family name of the user we want to match",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Individual user information"
+                ],
+                "summary": "Get user request with given ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "family_name",
+                        "required": true,
+                        "description": "User request family Name",
+                        "schema": {
+                            "$ref": "#/components/schemas/familyName"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/components/schemas/UserListResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad Request."
+                    },
+                    "404": {
+                        "description": "Failed. User not found."
+                    }
+                }
+            }
+        },
+        "/users/{id}/email": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the user we want to add a mail address to",
+                    "type": "string"
+                }
+            ],
+            "post": {
+                "tags": [
+                    "Individual user information"
+                ],
+                "summary": "Add (several) email address(es) to user's account by ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User Request ID",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "User Request Post Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserCreateMail"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/components/schemas/UserListResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        },
+        "/users/{id}/phone": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the user we want to add a phone number to",
+                    "type": "string"
+                }
+            ],
+            "post": {
+                "tags": [
+                    "Individual user information"
+                ],
+                "summary": "Add (several) phone number(s) to user's account by ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User Request ID",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "User Request Post Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserCreatePhone"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/components/schemas/UserListResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        },
+        "/users/{id}/email/{id_mail}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the user we want to match",
+                    "type": "string"
+                },
+                {
+                    "name": "id_mail",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the mail address we want to update",
+                    "type": "string"
+                }
+            ],
+            "put": {
+                "summary": "Update a user's mail address",
+                "tags": [
+                    "Individual user information"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User Request ID",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "id_mail",
+                        "required": true,
+                        "description": "User's mail address request ID",
+                        "schema": {
+                            "$ref": "#/components/schemas/id_mail"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "User Request Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserCreateMail"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/components/schemas/UserCreateMail"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        },
+        "/users/{id}/phone/{id_phone}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the user we want to match",
+                    "type": "string"
+                },
+                {
+                    "name": "id_phone",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the user's phone number we want to match",
+                    "type": "string"
+                }
+            ],
+            "put": {
+                "summary": "Update a user's phone number",
+                "tags": [
+                    "Individual user information"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User Request ID",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "id_phone",
+                        "required": true,
+                        "description": "User's phone request ID",
+                        "schema": {
+                            "$ref": "#/components/schemas/id_phone"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "User Request Post Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserCreatePhone"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/components/schemas/UserCreatePhone"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "id": {
+                "properties": {
+                    "uuid": {
+                        "type": "string"
+                    }
+                }
+            },
+            "familyName": {
+                "properties": {
+                    "uuid": {
+                        "type": "string"
+                    }
+                }
+            },
+            "id_phone": {
+                "properties": {
+                    "uuid": {
+                        "type": "string"
+                    }
+                }
+            },
+            "id_mail": {
+                "properties": {
+                    "uuid": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UserRequest": {
+                "type": "object",
+                "properties": {
+                    "last_name": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "first_name": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                }
+            },
+            "UserListResponse": {
+                "type": "object",
+                "properties": {
+                    "last_name": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "first_name": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "mails": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "numbers": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                }
+            },
+            "UserCreateMail": {
+                "type": "object",
+                "properties": {
+                    "mail": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                }
+            },
+            "UserCreatePhone": {
+                "type": "object",
+                "properties": {
+                    "number": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                }
+            }
+        }
+    }
+}
